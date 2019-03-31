@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-tag
-    :key="tag.id"
-    v-for="tag in dynamicTags"
-    closable
-    :disable-transitions="false"
-    @close="handleClose(tag)">
-    {{tag.nick}}
-    </el-tag>
-    <el-autocomplete
+      :key="tag.id"
+      v-for="tag in dynamicTags"
+      closable
+      :disable-transitions="false"
+      @close="handleClose(tag)"
+    >{{tag.nick}}</el-tag>
+    <el-input>
+      <el-autocomplete
         popper-class="my-autocomplete"
         v-if="inputVisible"
         v-model="inputValue"
@@ -16,13 +16,14 @@
         size="small"
         :fetch-suggestions="querySearchAsync"
         placeholder="请输入内容"
-        @select="handleSelect">
-    <!--
+        @select="handleSelect"
+      >
+        <!--
         @keyup.enter.native="handleInputConfirm"
         @blur="handleInputConfirm"
         @blur="handleBlur"
         -->
-    <!--
+        <!--
         <i
             class="el-icon-edit el-input__icon"
             slot="suffix"
@@ -30,12 +31,12 @@
         </i>
         -->
         <template slot-scope="props">
-            <span class="name">{{ props.item.name }}</span>
-            <span class="addr">{{ props.item.nick }}</span>
+          <span class="name">{{ props.item.name }}</span>
+          <span class="addr">{{ props.item.nick }}</span>
         </template>
-    </el-autocomplete>
+      </el-autocomplete>
     </el-input>
-    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+    <!-- <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button> -->
   </div>
 </template>
 
@@ -96,7 +97,7 @@ export default {
 
     showInput() {
       this.inputVisible = true;
-      this.$nextTick(_ => {
+      this.$nextTick(a => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
@@ -116,7 +117,7 @@ export default {
       this.add(this.inputValue);
     },
     handleSelect(item) {
-      console.log(item);
+      // console.log(item);
       this.add(item);
     },
     querySearchAsync(queryString, cb) {

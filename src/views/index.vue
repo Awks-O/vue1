@@ -70,14 +70,14 @@
           </el-submenu>
 
           <el-submenu index="9">
-            <template slot="title" collapse="false">
+            <template slot="title" collapse="true">
               <i class="el-icon-setting"></i>
               <span>药库管理</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="9-1" @click="addTab('药品管理', 'ConfigTable2')">药品管理</el-menu-item>
               <el-menu-item index="9-2" @click="addTab('采购', 'UserTable')">采购</el-menu-item>
-              <el-menu-item index="9-2" @click="addTab('出入库明细', 'UserTable')">出入库明细</el-menu-item>
+              <el-menu-item index="9-3" @click="addTab('出入库明细', 'UploadFile')">出入库明细</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -136,20 +136,15 @@ export default {
       menus: [{}],
 
       //Tabs
-      // selectTabName: "ConfigAdd",
+      selectTabName: "ConfigAdd",
       tabs: {
-        // ConfigAdd: {
-        //   title: "新建页面",
-        //   name: "ConfigAdd",
-        //   currentView: "ConfigAdd"
-        // }
       }
     };
   },
   computed: {
     lang: {
       get: function() {
-        console.log("config", Vue.config);
+        // console.log("config", Vue.config);
         return Vue.config.lang;
       },
       set: function(v) {
@@ -178,13 +173,13 @@ export default {
       this.showLogin = true;
     },
     loginSuccess(user) {
-      console.log("success", user);
+      // console.log("success", user);
 
       this.showLogin = false;
       this.user = user;
     },
     loginCancel() {
-      console.log("loginCancel");
+      // console.log("loginCancel");
       this.showLogin = false;
     },
     logout() {
@@ -199,6 +194,7 @@ export default {
     addTab(targetName, commentName) {
       // 如果已经存在
       if (this.tabs[commentName]) {
+        // this.removeTab(commentName);
         this.selectTabName = commentName;
         return;
       }
@@ -216,10 +212,10 @@ export default {
       this.$delete(this.tabs, targetName);
 
       // 选中第一个tab
-      for (let key in this.tabs) {
-        this.selectTabName = key;
-        break;
-      }
+      // for (let key in this.tabs) {
+      //   this.selectTabName = key;
+      //   break;
+      // }
     }
   }
 };
