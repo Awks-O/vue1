@@ -63,7 +63,7 @@
 export default {
   methods: {
     handleClick(row) {
-      console.log(row);
+      // console.log(row);
     },
     sortChange({column, prop, order}){
       this.sort = {prop, order};

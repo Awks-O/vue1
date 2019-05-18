@@ -52,7 +52,7 @@
        
         <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse">
           <el-submenu index="1">
-            <template slot="title" collapse="false">
+            <!-- <template slot="title" collapse="false">
               <i class="el-icon-location" @click="isCollapse = !isCollapse"></i>
               <span>基本组件</span>
             </template>
@@ -66,7 +66,7 @@
               <el-menu-item index="1-21" @click="addTab('简单树', 'SimpleTree')">简单树</el-menu-item>
               <el-menu-item index="1-22" @click="addTab('简单的带图标树', 'SimpleTreeWithIcon')">简单的带图标树</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item index="1-31" @click="addTab('上传组件', 'UploadFile')">上传组件</el-menu-item>
+            <el-menu-item index="1-31" @click="addTab('上传组件', 'UploadFile')">上传组件</el-menu-item> -->
           </el-submenu>
 
           <el-submenu index="9">
@@ -76,12 +76,12 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="9-1" @click="addTab('药品管理', 'ConfigTable2')">药品管理</el-menu-item>
-              <el-menu-item index="9-2" @click="addTab('采购', 'UserTable')">采购</el-menu-item>
-              <el-menu-item index="9-3" @click="addTab('出入库明细', 'UploadFile')">出入库明细</el-menu-item>
+              <el-menu-item index="9-2" @click="addTab('采购', 'ConfigTableSimple')">采购</el-menu-item>
+              <el-menu-item index="9-3" @click="addTab('出入库明细', 'UserTable')">出入库明细</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
-          <!-- <el-submenu index="4">
+        <!-- <el-submenu index="4">
           <template slot="title" collapse=false>
             <i class="el-icon-setting"></i>
             <span>日志分析</span>
@@ -90,7 +90,7 @@
             <el-menu-item index="4-1" @click="addTab('上传日志', 'UploadFile')">上传日志</el-menu-item>
             <el-menu-item index="4-2" @click="addTab('上传记录', 'UploadHistory')">上传记录</el-menu-item>
           </el-menu-item-group>
-        </el-submenu>
+        </el-submenu> -->
 
         <el-submenu index="0">
           <template slot="title" collapse=false>
@@ -101,7 +101,7 @@
             <el-menu-item index="0-1" >分页组件</el-menu-item>
             <el-menu-item index="0-2" @click="addTab('选人组件', 'SelectUser')">选人组件</el-menu-item>
           </el-menu-item-group>
-          </el-submenu>-->
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>

@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     handleNodeClick(node) {
-      console.log(node);
+      // console.log(node);
     },
     reload() {
       this.ajax.get("/tree/simple").then(result => {

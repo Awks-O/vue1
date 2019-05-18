@@ -41,7 +41,7 @@
         prop="roles"
         label="角色">
         <template scope="scope">
-          <el-tag  v-for="(item,index) in scope.row.roles"
+          <el-tag :key="item.id" v-for="(item) in scope.row.roles"
           :type="item.name === 'admin' ? 'primary' : 'success'"
           disable-transitions>{{item.name}}</el-tag>
         </template>
@@ -92,7 +92,7 @@
 export default {
   methods: {
     handleClick(row) {
-      console.log(row);
+      // console.log(row);
     },
     sortChange({column, prop, order}){
       this.sort = {prop, order};

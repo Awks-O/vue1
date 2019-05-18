@@ -83,12 +83,12 @@ export default {
         this.rowClick(row);
     },
     rowClick(row) {
-      console.log(row);
+      // console.log(row);
       this.currentRow = row;
       this.load(row.id);
     },
     load(uploadRecordId) {
-      console.log("图表", uploadRecordId);
+      // console.log("图表", uploadRecordId);
 
       this.ajax
         .get(

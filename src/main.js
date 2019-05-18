@@ -77,7 +77,7 @@ function switchLanguage(value){
 
     Vue.config.lang = lang;
 
-    console.log("language", lang);
+    // console.log("language", lang);
 }
 
 switchLanguage();

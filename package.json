@@ -12,7 +12,7 @@
     "echarts": "^4.1.0",
     "element-ui": "^2.4.6",
     "v-charts": "^1.17.10",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-bus": "^1.1.0",
     "vue-i18n": "^8.0.0",
     "vue-router": "^3.0.1",
@@ -28,7 +28,7 @@
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
     "vue-cli-plugin-element": "^1.0.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
     "root": true,

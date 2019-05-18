@@ -9,7 +9,7 @@
       @current-change="handleCurrentChange"
       :current-page="page"
       :page-sizes="[5, 10, 50, 100]"
-      :page-size="pagesize"
+      :page-size="pageSize"
       :layout= "layout"
       :total="total">
     </el-pagination>  
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      this.pagesize = val;
+      this.pageSize = val;
       this.reload();
     },
     handleCurrentChange(val) {
@@ -73,7 +73,7 @@ export default {
         .get(this.url, {
           params: {
             page: this.page,
-            pagesize: this.pagesize,
+            pageSize: this.pageSize,
             sortfield: this.sort.prop,
             sort: this.sort.order,
             keyword: this.keyword
@@ -82,7 +82,7 @@ export default {
         .then(result => {
           if (result.code == 0) {
             this.page = result.data.page;
-            this.pagesize = result.data.pagesize;
+            this.pageSize = result.data.pageSize;
             this.total = result.data.total;
 
             this.$emit("input", result.data.rows);
@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       page: 1,
-      pagesize: this.pageSize,
+      pageSize: this.pageSize,
       total: 0
     };
   },

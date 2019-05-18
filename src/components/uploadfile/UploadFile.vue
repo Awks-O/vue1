@@ -53,10 +53,10 @@ export default {
   },
   methods: {
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
+      // console.log(file);
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -65,7 +65,7 @@ export default {
       );
     },
     beforeUpload(file) {
-      console.log("before-upload", file);
+      // console.log("before-upload", file);
 
       let param = new FormData(); // 创建form对象
 
