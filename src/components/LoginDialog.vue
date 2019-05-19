@@ -35,14 +35,14 @@ export default {
       get: function() {
         return this.show;
       },
-      set: function(v) {
+      set: function() {
         //do nothing
       }
     }
   },
   methods: {
     doLogin() {
-      console.log("login: ", this.form);
+      // console.log("login: ", this.form);
 
       let self = this;
       //

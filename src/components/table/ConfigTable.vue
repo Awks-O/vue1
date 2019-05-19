@@ -62,14 +62,14 @@
 <script>
 export default {
   methods: {
-    handleClick(row) {
+    handleClick() {
       // console.log(row);
     },
-    sortChange({column, prop, order}){
+    sortChange({prop, order}){
       this.sort = {prop, order};
     },
     deleteConfig(row) {
-      this.ajax.post("/config/delete?id=" + row.id).then(result => {
+      this.ajax.post("/medicine/del?id=" + row.id).then(result => {
         if (result.code == 0) {
           this.info("delete success");
           this.refreshConfig();

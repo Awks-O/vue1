@@ -8,16 +8,6 @@
     </header>
     <el-header style="height: 30px">
       <el-row type="flex" justify="center" align="middle">
-        <!-- <el-col :span="12">
-          <div class="grid-content bg-purple">
-            <span class="logo-title">代码模板</span>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple-light">
-            <el-button plain size="mini" type="primary" @click="handleStart">Hello World</el-button>
-          </div>
-        </el-col>-->
         <el-col :span="8">
           <div class="grid-content bg-purple-light text-right">
             <!-- <span v-if="user != null">
