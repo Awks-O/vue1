@@ -34,12 +34,6 @@
 
     <el-container>
       <el-aside style="width:auto;">
-        
-      <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-        <el-radio-button :label="false" v-show="isCollapse">展开</el-radio-button>
-        <el-radio-button :label="true" v-show="!isCollapse">收起</el-radio-button>
-      </el-radio-group> -->
-       
         <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse">
           <el-submenu index="1">
             <!-- <template slot="title" collapse="false">
@@ -65,9 +59,9 @@
               <span>药库管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="9-1" @click="addTab('药品管理', 'ConfigTable2')">药品管理</el-menu-item>
+              <el-menu-item index="9-1" @click="addTab('药品管理', 'Medicine')">药品管理</el-menu-item>
               <el-menu-item index="9-2" @click="addTab('采购', 'ConfigTableSimple')">采购</el-menu-item>
-              <el-menu-item index="9-3" @click="addTab('出入库明细', 'UserTable')">出入库明细</el-menu-item>
+              <el-menu-item index="9-3" @click="addTab('出入库明细', 'OutInDetail')">出入库明细</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -82,7 +76,7 @@
           </el-menu-item-group>
         </el-submenu> -->
 
-        <el-submenu index="0">
+        <!-- <el-submenu index="0">
           <template slot="title" collapse=false>
             <i class="el-icon-setting"></i>
             <span>自定义组件</span>
@@ -91,7 +85,7 @@
             <el-menu-item index="0-1" >分页组件</el-menu-item>
             <el-menu-item index="0-2" @click="addTab('选人组件', 'SelectUser')">选人组件</el-menu-item>
           </el-menu-item-group>
-          </el-submenu>
+          </el-submenu> -->
         </el-menu>
       </el-aside>
       <el-main>
@@ -122,7 +116,7 @@ export default {
       user: null,
       keyword: "",
       isCollapse: false,
-
+      
       menus: [{}],
 
       //Tabs

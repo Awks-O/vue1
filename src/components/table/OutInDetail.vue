@@ -1,63 +1,55 @@
- /**
+/**
  * 表格组件范例
- *
  */
 <template>
-  <section>
+  <div>
     <el-input
-      style="width:90%"
-      placeholder="请输入关键字过滤"
+      style="width:85%"
+      placeholder="请输入出入库方过滤"
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
-
-    <el-button size="medium" type="primary" @click="handleAdd">添加药品</el-button>
-
-    <el-scrollbar>
-      <el-table
-        :data="medicine"
-        border
-        size="mini"
-        stripe
-        @sort-change="sortChange"
-        style="width: 100%"
-      >
-        <el-table-column prop="medicineNumber" label="药品编号" width="100" align="center"></el-table-column>
-        <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
-        <el-table-column prop="stockUnit" label="库存单位" align="center" width="120"></el-table-column>
-        <el-table-column prop="stock" label="库存量" align="center" width="120"></el-table-column>
-        <el-table-column prop="alarmValue" label="报警值" align="center" width="100"></el-table-column>
-        <el-table-column
-          prop="purchaseDate"
-          label="预计采购日期"
-          align="center"
-          width="150"
-          :formatter="dateFormat"
-        ></el-table-column>
-        <el-table-column
-          prop="usableTime"
-          label="预计剩余可用日期"
-          align="center"
-          width="150"
-          :formatter="dateFormat"
-        ></el-table-column>
-        <el-table-column prop="createDatetime" label="操作" width="145" align="center">
-          <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="large">编辑</el-button>
-            <el-button @click="delItem(scope.row.id)" type="text" size="large">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-scrollbar>
-    <Pagination
-      ref="page1"
-      url="/medicine/list"
-      :pagesize="pagesize"
-      :page="page"
-      :keyword="keyword"
-      :sort="sort"
-      v-model="medicine"
-    />
+    <el-button size="medium" type="primary" @click="handleAdd">添加出入库纪录</el-button>
+    <p/>
+    <el-table
+      :data="details"
+      size="mini"
+      border
+      stripe
+      @sort-change="sortChange"
+      style="width: 100%"
+    >
+      <el-table-column prop="medicineNumber" label="药品编号" width="120" align="center"></el-table-column>
+      <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
+      <el-table-column prop="stockUnit" label="存储单位" align="center" width="80"></el-table-column>
+      <el-table-column prop="amount" label="数量" align="center" width="100"></el-table-column>
+      <el-table-column prop="outInObj" label="出入库方" align="center" width="150"></el-table-column>
+      <el-table-column prop="direction" label="出入方向" align="center" width="150"></el-table-column>
+      <el-table-column
+        prop="outInTime"
+        label="出入时间"
+        align="center"
+        :formatter="dateFormat"
+        width="150"
+      ></el-table-column>
+      <el-table-column fixed="right" label="操作" align="center" width="150">
+        <template slot-scope="scope">
+          <el-button
+            @click="showPasswordDlg(scope.row)"
+            type="text"
+            size="small"
+            icon="el-icon-edit"
+          ></el-button>
+          <el-button
+            @click="deleteConfig(scope.row)"
+            type="text"
+            size="small"
+            icon="el-icon-delete"
+          ></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <Pagination ref="page1" url="/user/list" :keyword="keyword" :sort="sort" v-model="details"/>
 
     <!--编辑界面-->
     <el-dialog
@@ -73,7 +65,7 @@
         <el-form-item label="药品名称" prop="medicineName">
           <el-input v-model="editForm.medicineName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="库存单位" prop="stockUnit">
+        <el-form-item label="存储单位" prop="stockUnit">
           <el-select v-model="editForm.stockUnit" placeholder="请选择">
             <el-option
               v-for="item in unit"
@@ -83,33 +75,29 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="库存量" prop="stock">
-          <el-input v-model="editForm.stock"></el-input>
+        <el-form-item label="数量" prop="amount">
+          <el-input v-model="editForm.amount"></el-input>
         </el-form-item>
-        <el-form-item label="报警值" prop="alarmValue">
-          <el-input v-model="editForm.alarmValue"></el-input>
+        <el-form-item label="出入库方" prop="outInObj">
+          <el-input v-model="editForm.outInObj"></el-input>
         </el-form-item>
-        <el-form-item label="预测">
-          <el-radio-group v-model="editForm.forecast">
-            <el-radio class="radio" :label="1">是</el-radio>
-            <el-radio class="radio" :label="0">否</el-radio>
+        <el-form-item label="出入方向" prop="direction">
+          <el-radio-group v-model="editForm.direction">
+            <el-radio class="radio" :label="1">出库</el-radio>
+            <el-radio class="radio" :label="0">入库</el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item>-->
+        <el-form-item label="出入时间" prop="outInTime">
+          <el-input v-model="editForm.outInTime"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisible=false">取消</el-button>
         <el-button v-if="dialogStatus=='create'" type="primary" @click="editMedicine">添加</el-button>
-        <el-button v-else type="primary" @click="editMedicine">修改</el-button>
-        <!-- <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button> -->
+        <el-button v-elseelse type="primary" @click="editMedicine">修改</el-button>
       </div>
     </el-dialog>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -118,6 +106,13 @@ export default {
     sortChange({ prop, order }) {
       this.sort = { prop, order };
     },
+    dateFormat: function(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "data not found";
+      }
+      return new Date(date).format("yyyy-MM-dd");
+    },
     //新增
     editMedicine: function() {
       this.$refs.editForm.validate(valid => {
@@ -125,7 +120,9 @@ export default {
           this.$confirm("确认提交吗？", "提示", {})
             .then(() => {
               let param = Object.assign({}, this.editForm);
-              this.ajax.post("/medicine/edit", param).then(result => {
+              this.ajax
+                .post("/medicine/outInDetail/edit", param)
+                .then(result => {
                   if (result.code == "SUCCESS") {
                     this.info("添加成功!");
                   } else {
@@ -153,16 +150,9 @@ export default {
       this.dialogFormVisible = true;
       this.editForm = Object.assign({}, row);
     },
-    dateFormat: function(row, column) {
-      var date = row[column.property];
-      if (date == undefined) {
-        return "data not found";
-      }
-      return new Date(date).format("yyyy-MM-dd");
-    },
     delItem(id) {
       this.confirm("此操作将永久删除该记录, 是否继续?").then(() => {
-        this.ajax.post("/medicine/del?id=" + id).then(result => {
+        this.ajax.post("/medicine/outInDetail/del?id=" + id).then(result => {
           if (result.code == "SUCCESS") {
             this.info("delete success");
             this.refreshConfig();
@@ -211,27 +201,12 @@ export default {
       filters: {
         name: ""
       },
-      users: [],
       total: 0,
-      page: 1,
-      // listLoading: false,v-loading="listLoading"
-      sels: [], //列表选中列
       //编辑界面数据
       editForm: {
         id: "0"
-      },
-
-      addFormVisible: false, //新增界面是否显示
-      //addLoading: false,
-      addFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       }
     };
   }
 };
 </script>
-<style>
-.el-scrollbar__wrap {
-  overflow-x: hidden;
-}
-</style>

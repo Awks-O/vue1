@@ -5,44 +5,24 @@
  */
 <template>
   <div>
-    <el-table
-      :data="configs"
-      border
-      stripe
-      style="width: 100%">
-      <el-table-column
-        fixed
-        sortable
-        prop="id"
-        label="ID"
-        
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        sortable
-        label="名称"
-        width="300">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="value"
-        label="取值"
-        width="300">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="description"
-        label="描述">
-      </el-table-column>
-    </el-table>
-
-    <Pagination url="/config/list" v-model="configs"/>
+    <el-input
+      style="width:90%"
+      placeholder="请输入查询的药品"
+      prefix-icon="el-icon-search"
+      v-model="keyword"
+    ></el-input>
+    <br/>
+    <DataVisible></DataVisible>
+    <!-- <Pagination url="/config/list" v-model="configs"/> -->
   </div>
 </template>
 
 <script>
+import DataVisible from "./DataVisible";
 export default {
+  components: {
+    DataVisible
+  },
   data() {
     return {
       configs: []
