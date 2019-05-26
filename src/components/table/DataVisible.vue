@@ -33,12 +33,12 @@ export default {
       "Matcha Latte",
       43.3,
       85.8,
+      13.7,
+      23.7,
       93.7,
+      53.7,
       93.7,
-      93.7,
-      93.7,
-      93.7,
-      93.7,
+      3.7,
       93.7
     ];
     var myChart = echarts.init(document.getElementById("myChart"), "dark");
@@ -105,7 +105,7 @@ export default {
           }
         }
       },
-      series: [{ type: "line", seriesLayoutBy: "row" }]
+      series: [{ type: "line", seriesLayoutBy: "row", smooth:true, smoothness:1 }]
     });
   },
   methods: {}

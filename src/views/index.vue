@@ -60,8 +60,9 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="9-1" @click="addTab('药品管理', 'Medicine')">药品管理</el-menu-item>
-              <el-menu-item index="9-2" @click="addTab('采购', 'ConfigTableSimple')">采购</el-menu-item>
-              <el-menu-item index="9-3" @click="addTab('出入库明细', 'OutInDetail')">出入库明细</el-menu-item>
+              <el-menu-item index="9-2" @click="addTab('采购', 'UploadHistory')">采购</el-menu-item>
+              <el-menu-item index="9-3" @click="addTab('出库信息', 'OutInfo')">出库信息</el-menu-item>
+              <el-menu-item index="9-4" @click="addTab('入库信息', 'InInfo')">入库信息</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 

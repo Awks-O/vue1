@@ -1,55 +1,68 @@
-/**
- * 表格组件范例
- */
 <template>
-  <div>
+  <section>
     <el-input
       style="width:85%"
       placeholder="请输入出入库方过滤"
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
+
     <el-button size="medium" type="primary" @click="handleAdd">添加出入库纪录</el-button>
-    <p/>
-    <el-table
-      :data="details"
-      size="mini"
-      border
-      stripe
-      @sort-change="sortChange"
-      style="width: 100%"
-    >
-      <el-table-column prop="medicineNumber" label="药品编号" width="120" align="center"></el-table-column>
-      <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
-      <el-table-column prop="stockUnit" label="存储单位" align="center" width="80"></el-table-column>
-      <el-table-column prop="amount" label="数量" align="center" width="100"></el-table-column>
-      <el-table-column prop="outInObj" label="出入库方" align="center" width="150"></el-table-column>
-      <el-table-column prop="direction" label="出入方向" align="center" width="150"></el-table-column>
-      <el-table-column
-        prop="outInTime"
-        label="出入时间"
-        align="center"
-        :formatter="dateFormat"
-        width="150"
-      ></el-table-column>
-      <el-table-column fixed="right" label="操作" align="center" width="150">
-        <template slot-scope="scope">
-          <el-button
-            @click="showPasswordDlg(scope.row)"
-            type="text"
-            size="small"
-            icon="el-icon-edit"
-          ></el-button>
-          <el-button
-            @click="deleteConfig(scope.row)"
-            type="text"
-            size="small"
-            icon="el-icon-delete"
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <Pagination ref="page1" url="/user/list" :keyword="keyword" :sort="sort" v-model="details"/>
+
+    <el-scrollbar>
+      <el-table
+        :data="details"
+        size="mini"
+        border
+        stripe
+        @sort-change="sortChange"
+        style="width: 100%"
+      >
+        <el-table-column prop="medicineNumber" label="药品编号" width="100" align="center"></el-table-column>
+        <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
+        <el-table-column prop="stockUnit" label="存储单位" align="center" width="90"></el-table-column>
+        <el-table-column prop="amount" label="数量" align="center" width="90"></el-table-column>
+        <el-table-column prop="unitPrice" label="单价" align="center" width="90"></el-table-column>
+        <el-table-column prop="supplier" label="供应商" align="center" width="100"></el-table-column>
+        <el-table-column
+          prop="productionDate"
+          label="生产日期"
+          align="center"
+          :formatter="dateFormat"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="expirationDate"
+          label="保质期"
+          align="center"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="inDate"
+          label="入库日期"
+          align="center"
+          :formatter="dateFormat"
+          width="100"
+        ></el-table-column>
+        <el-table-column fixed="right" label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="large">编辑</el-button>
+            <el-button @click="delItem(scope.row.id)" type="text" size="large">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <br>
+    </el-scrollbar>
+    
+    <Pagination
+      ref="page2"
+      url="/medicine/inInfo/list"
+      :pagesize="pagesize"
+      :page="page"
+      :keyword="keyword"
+      :sort="sort"
+      v-model="details"
+    />
 
     <!--编辑界面-->
     <el-dialog
@@ -78,26 +91,26 @@
         <el-form-item label="数量" prop="amount">
           <el-input v-model="editForm.amount"></el-input>
         </el-form-item>
-        <el-form-item label="出入库方" prop="outInObj">
+        <el-form-item label="供应商" prop="outInObj">
           <el-input v-model="editForm.outInObj"></el-input>
         </el-form-item>
-        <el-form-item label="出入方向" prop="direction">
-          <el-radio-group v-model="editForm.direction">
-            <el-radio class="radio" :label="1">出库</el-radio>
-            <el-radio class="radio" :label="0">入库</el-radio>
-          </el-radio-group>
+        <el-form-item label="生产日期" prop="outInTime">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outInTime"></el-date-picker>
         </el-form-item>
-        <el-form-item label="出入时间" prop="outInTime">
-          <el-input v-model="editForm.outInTime"></el-input>
+        <el-form-item label="保质期" prop="amount">
+          <el-input v-model="editForm.amount"></el-input>
+        </el-form-item>
+        <el-form-item label="入库日期" prop="outInTime">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outInTime"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisible=false">取消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="editMedicine">添加</el-button>
-        <el-button v-elseelse type="primary" @click="editMedicine">修改</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="editDetail">添加</el-button>
+        <el-button v-else type="primary" @click="editDetail">修改</el-button>
       </div>
     </el-dialog>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -113,15 +126,23 @@ export default {
       }
       return new Date(date).format("yyyy-MM-dd");
     },
+    outInFormat: function(row, column) {
+      var data = row[column.property];
+      if (data == 1) {
+        return "出库";
+      } else {
+        return "入库";
+      }
+    },
     //新增
-    editMedicine: function() {
+    editDetail: function() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {})
             .then(() => {
               let param = Object.assign({}, this.editForm);
               this.ajax
-                .post("/medicine/outInDetail/edit", param)
+                .post("/medicine/inInfo/edit", param)
                 .then(result => {
                   if (result.code == "SUCCESS") {
                     this.info("添加成功!");
@@ -152,7 +173,7 @@ export default {
     },
     delItem(id) {
       this.confirm("此操作将永久删除该记录, 是否继续?").then(() => {
-        this.ajax.post("/medicine/outInDetail/del?id=" + id).then(result => {
+        this.ajax.post("/medicine/inInfo/del?id=" + id).then(result => {
           if (result.code == "SUCCESS") {
             this.info("delete success");
             this.refreshConfig();
@@ -165,7 +186,7 @@ export default {
     },
     // 刷新表格数据
     refreshConfig() {
-      this.$refs.page1.reload();
+      this.$refs.page2.reload();
     }
   },
   data() {
@@ -189,7 +210,8 @@ export default {
         }
       ],
       keyword: "",
-      medicine: [],
+      details: [],
+      page:"",
       pagesize: 10,
       sort: {},
       dialogStatus: "",

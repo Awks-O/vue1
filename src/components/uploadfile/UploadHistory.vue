@@ -1,73 +1,77 @@
-/**
- * 表格组件范例
- * 
- * @author xiaowenjie https://github.com/xwjie
- */
 <template>
-    <el-row :gutter="10">
-  <el-col :span="8">
-  <div>
-    <el-upload
-            class="upload-demo"
-            drag
-            action="/logparse/upload"
-            :before-upload="beforeUpload"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>，只能上传log文件</div>
-    </el-upload>
-    <el-input
-        placeholder="请输入关键字过滤"
-        prefix-icon="el-icon-search"
-        v-model="keyword">
-    </el-input>
-    <p/>
-    <el-table
-      ref="table1"
-      :data="configs"
-      size = "mini"
-      border
-      @sort-change="sortChange"
-      @row-click="rowClick"
-      highlight-current-row
-      style="width: 100%">
-      <el-table-column
-        prop="name"
-        sortable
-        label="文件名">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="createTime"
-        label="上传时间"
-        :formatter="dateFormat"
-        width="110">
-      </el-table-column>     
-      <el-table-column
-        label="数量"
-        width="50">
-        <template slot-scope="scope">
-          <el-button @click="rowClick(scope.row)" type="text" size="small">{{scope.row.dataCount}}</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <el-row :gutter="10">
+    <el-col :span="8">
+      <div>
+        <el-upload
+          class="upload-demo"
+          drag
+          action="/logparse/upload"
+          :before-upload="beforeUpload"
+          multiple
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>，只能上传log文件
+          </div>
+        </el-upload>
+        <el-input placeholder="请输入关键字过滤" prefix-icon="el-icon-search" v-model="keyword"></el-input>
+        <p/>
+        <el-table
+          ref="table1"
+          :data="configs"
+          size="mini"
+          border
+          @sort-change="sortChange"
+          @row-click="rowClick"
+          highlight-current-row
+          style="width: 100%"
+        >
+          <el-table-column prop="name" sortable label="文件名"></el-table-column>
+          <el-table-column
+            sortable
+            prop="createTime"
+            label="上传时间"
+            :formatter="dateFormat"
+            width="110"
+          ></el-table-column>
+          <el-table-column label="数量" width="50">
+            <template slot-scope="scope">
+              <el-button
+                @click="rowClick(scope.row)"
+                type="text"
+                size="small"
+              >{{scope.row.dataCount}}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-    <Pagination  ref="page1" url="/upload/list" :small="true" :keyword="keyword" :pageSize=5 :sort="sort" :refreshDone='refreshDone' v-model="configs"/>
-  </div>
+        <Pagination
+          ref="page1"
+          url="/upload/list"
+          :small="true"
+          :keyword="keyword"
+          :pageSize="5"
+          :sort="sort"
+          :refreshDone="refreshDone"
+          v-model="configs"
+        />
+      </div>
     </el-col>
-  <el-col :span="16">
-    <div>
-      当前文件：<span class="current-filename">{{currentFileName}}</span>
-    </div>
-    <ve-line :data="chartData"></ve-line>
-  </el-col>
-    </el-row>
+    <el-col :span="16">
+      <div>
+        当前文件：
+        <span class="current-filename">{{currentFileName}}</span>
+      </div>
+      <ve-line :data="chartData"></ve-line>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
 export default {
   methods: {
-    sortChange({ column, prop, order }) {
+    sortChange({ prop, order }) {
       this.sort = { prop, order };
     },
     refreshDone(rows) {
@@ -77,10 +81,10 @@ export default {
         this.selectRow(0);
       }
     },
-    selectRow(index){
-        var row = this.configs[index];
-        this.$refs.table1.setCurrentRow(row);
-        this.rowClick(row);
+    selectRow(index) {
+      var row = this.configs[index];
+      this.$refs.table1.setCurrentRow(row);
+      this.rowClick(row);
     },
     rowClick(row) {
       // console.log(row);
@@ -91,9 +95,7 @@ export default {
       // console.log("图表", uploadRecordId);
 
       this.ajax
-        .get(
-          "/chart/line?uploadRecordId=" + uploadRecordId
-        )
+        .get("/chart/line?uploadRecordId=" + uploadRecordId)
         .then(result => {
           if (result.code == 0) {
             //this.info("delete success");
@@ -115,7 +117,7 @@ export default {
       return new Date(date).format("MMdd hh:mm");
     },
     beforeUpload(file) {
-      console.log("before-upload", file);
+      //console.log("before-upload", file);
 
       let param = new FormData(); // 创建form对象
 
@@ -132,7 +134,7 @@ export default {
           this.info("上传成功!");
 
           // 插入到第一个位置
-          this.configs.splice(0,0,result.data);
+          this.configs.splice(0, 0, result.data);
 
           // 选中
           this.selectRow(0);
@@ -153,7 +155,7 @@ export default {
         dataCount: 0
       },
       chartData: {
-        columns: ["日期", "访问用户", "下单用户", "下单率"],
+        columns: ["日期", "访问用户"],
         rows: [
           { 日期: "1/1", 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
           { 日期: "1/2", 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
@@ -165,9 +167,9 @@ export default {
       }
     };
   },
-  computed:{
-    currentFileName(){
-      if(this.currentRow){
+  computed: {
+    currentFileName() {
+      if (this.currentRow) {
         return this.currentRow.name || "";
       }
       return "";
@@ -187,7 +189,7 @@ export default {
   text-align: center;
 }
 
-.current-filename{
+.current-filename {
   border: 1px solid darkgrey;
   background-color: #fcfcfc;
   padding: 1px 5px 1px 5px;

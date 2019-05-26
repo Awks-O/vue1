@@ -72,7 +72,7 @@
 
 <script>
 export default {
-  name: "xiaofengqing-vue-template",
+  name: "vue-template",
   props: {
     msg: String
   }

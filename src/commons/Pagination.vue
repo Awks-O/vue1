@@ -1,8 +1,3 @@
-/**
- * 分页组件
- * 父组件更新需要调用reload方法。
- * @author xiaowenjie https://github.com/xwjie
- */
 <template>
     <el-pagination
       @size-change="handleSizeChange"

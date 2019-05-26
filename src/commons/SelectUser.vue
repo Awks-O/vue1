@@ -59,7 +59,7 @@
 
 .my-autocomplete {
   width: 400px;
-  li {
+  /* li {
     line-height: normal;
     padding: 7px;
 
@@ -76,7 +76,7 @@
     .highlighted .addr {
       color: #ddd;
     }
-  }
+  } */
 }
 </style>
 
