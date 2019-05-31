@@ -14,6 +14,7 @@ import UploadHistory from './uploadfile/UploadHistory';
 // 
 import OutInfo from './table/OutInfo';
 import InInfo from './table/InInfo';
+import Purchase from './table/Purchase';
 
 import Vue from 'vue';
 
@@ -35,6 +36,8 @@ function registerComponents(){
     // User
     Vue.component('OutInfo', OutInfo);
     Vue.component('InInfo', InInfo);
+
+    Vue.component('Purchase', Purchase);
     
 }
 

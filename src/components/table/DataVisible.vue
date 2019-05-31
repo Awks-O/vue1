@@ -2,7 +2,9 @@
   <!-- 图表 -->
   <div>
     <div class="charts">
-      <div id="myChart" :style="{width:'100%',height:'300px'}"></div>
+      <div id="myChart" @v-show="reload" :style="{width:'100%',height:'300px'}"></div>
+      <span>{{xList}}</span>
+      <span>{{yList}}</span>
     </div>
   </div>
 </template>
@@ -13,34 +15,11 @@ export default {
   data() {
     return {};
   },
-
+  props: { xList: { Array, required: true }, yList: { Array, required: true } },
   mounted() {
     /*ECharts图表*/
-    var a1 = [
-      "product",
-      "2015",
-      "2016",
-      "2017",
-      "预测",
-      "20171",
-      "预测1",
-      "20127",
-      "2预测",
-      "22017",
-      "2预测"
-    ];
-    var a2 = [
-      "Matcha Latte",
-      43.3,
-      85.8,
-      13.7,
-      23.7,
-      93.7,
-      53.7,
-      93.7,
-      3.7,
-      93.7
-    ];
+    var a1 =  this.xList.slice(0,)
+    var a2 = this.yList.slice(0,);
     var myChart = echarts.init(document.getElementById("myChart"), "dark");
     myChart.setOption({
       title: {
@@ -79,6 +58,7 @@ export default {
         source: [a1, a2]
       },
       xAxis: {
+        data:a1,
         type: "category",
         axisLine: {
           lineStyle: {
@@ -90,7 +70,6 @@ export default {
             color: "#000000" //坐标值得具体的颜色
           }
         }
-        //data: ["0", "6H", "9H", "12H", "15H", "18H", "24H"]
       },
       yAxis: {
         type: "value",
@@ -105,9 +84,18 @@ export default {
           }
         }
       },
-      series: [{ type: "line", seriesLayoutBy: "row", smooth:true, smoothness:1 }]
+      series: [
+        { type: "line", seriesLayoutBy: "row", smooth: true, smoothness: 1 }
+      ]
     });
   },
-  methods: {}
+  methods: {
+    reload() {},
+    refreshDone: {
+      type: Function,
+      required: false,
+      default: null
+    }
+  }
 };
 </script>

@@ -38,6 +38,11 @@ export default {
       required: false,
       default: ""
     },
+    keyword1: {
+      type: String,
+      required: false,
+      default: ""
+    },
     // 紧凑型
     small: {
       type: Boolean,
@@ -71,7 +76,8 @@ export default {
             pagesize: this.pagesize,
             sortfield: this.sort.prop,
             sort: this.sort.order,
-            keyword: this.keyword
+            keyword1: this.keyword1,
+            keyword: this.keyword,
           }
         })
         .then(result => {
@@ -102,6 +108,9 @@ export default {
       this.reload();
     },
     keyword(val) {
+      this.reload();
+    },
+    keyword1(val) {
       this.reload();
     }
   },

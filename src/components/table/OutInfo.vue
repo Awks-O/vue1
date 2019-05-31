@@ -1,13 +1,16 @@
 <template>
   <section>
     <el-input
-      style="width:85%"
+      style="width:220px"
       placeholder="请输入出入库方过滤"
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
 
-    <el-button size="medium" type="primary" @click="handleAdd">添加出入库纪录</el-button>
+    <div style="float: right;">
+      <el-button size="medium" type="primary" @click="exportFile" style="margin-left: 10px;">导出</el-button>
+      <el-button size="medium" type="primary" @click="handleAdd">添加出库纪录</el-button>
+    </div>
 
     <el-scrollbar>
       <el-table
@@ -18,11 +21,11 @@
         @sort-change="sortChange"
         style="width: 100%"
       >
-        <el-table-column prop="medicineNumber" label="药品编号" width="145" align="center"></el-table-column>
+        <el-table-column prop="medicineNumber" label="本位码" width="145" align="center"></el-table-column>
         <el-table-column prop="medicineName" label="药品名称" align="center" width="145"></el-table-column>
-        <el-table-column prop="stockUnit" label="存储单位" align="center" width="100"></el-table-column>
-        <el-table-column prop="unitPrice" label="退货单价" align="center" width="100"></el-table-column>
         <el-table-column prop="amount" label="数量" align="center" width="100"></el-table-column>
+        <el-table-column prop="stockUnit" label="规格" align="center" width="100"></el-table-column>
+        <el-table-column prop="unitPrice" label="退货单价" align="center" width="100"></el-table-column>
         <el-table-column prop="supplier" label="供应商" align="center" width="150"></el-table-column>
         <el-table-column
           prop="outDate"
@@ -40,7 +43,7 @@
       </el-table>
       <br>
     </el-scrollbar>
-    
+
     <Pagination
       ref="page2"
       url="/medicine/outInfo/list"
@@ -59,7 +62,7 @@
       width="400px"
     >
       <el-form :model="editForm" label-width="80px" ref="editForm">
-        <el-form-item label="药品编号" prop="medicineNumber">
+        <el-form-item label="本位码" prop="medicineNumber">
           <el-input v-model="editForm.medicineNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="药品名称" prop="medicineName">
@@ -84,8 +87,8 @@
         <el-form-item label="供应商" prop="supplier">
           <el-input v-model="editForm.supplier"></el-input>
         </el-form-item>
-        <el-form-item label="日期" prop="outInTime">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outInTime"></el-date-picker>
+        <el-form-item label="日期" prop="outDate">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outDate"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -102,6 +105,9 @@ export default {
   methods: {
     sortChange({ prop, order }) {
       this.sort = { prop, order };
+    },
+    exportFile:function() {
+      window.location.href="http://localhost:8085/medicine/outInfo/export";
     },
     dateFormat: function(row, column) {
       var date = row[column.property];
@@ -125,18 +131,16 @@ export default {
           this.$confirm("确认提交吗？", "提示", {})
             .then(() => {
               let param = Object.assign({}, this.editForm);
-              this.ajax
-                .post("/medicine/outInfo/edit", param)
-                .then(result => {
-                  if (result.code == "SUCCESS") {
-                    this.info("添加成功!");
-                  } else {
-                    this.error(result.msg);
-                  }
-                  this.$refs["editForm"].resetFields();
-                  this.dialogFormVisible = false;
-                  this.refreshConfig();
-                });
+              this.ajax.post("/medicine/outInfo/edit", param).then(result => {
+                if (result.code == "SUCCESS") {
+                  this.info("添加成功!");
+                } else {
+                  this.error(result.msg);
+                }
+                this.$refs["editForm"].resetFields();
+                this.dialogFormVisible = false;
+                this.refreshConfig();
+              });
             })
             .catch(e => {
               this.info("操作失败!:" + e);
@@ -195,7 +199,7 @@ export default {
       ],
       keyword: "",
       details: [],
-      page:"",
+      page: "",
       pagesize: 10,
       sort: {},
       dialogStatus: "",

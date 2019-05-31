@@ -8,5 +8,8 @@ module.exports = {
     https: false,
     hotOnly: false,
   },
+  configureWebpack: {
+    devtool: 'source-map'
+  }
   // ...
 }

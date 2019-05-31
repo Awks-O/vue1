@@ -13,7 +13,7 @@ util.title = function (title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://localhost:8080' :
+    'http://localhost:8085' :
     env === 'production' ?
         'springboot' :
         'springboot';

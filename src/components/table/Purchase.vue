@@ -6,14 +6,21 @@
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
-    <div style="float: right;">
-      <el-button size="medium" type="primary" @click="exportFile" style="margin-left: 10px;">导出</el-button>
-      <el-button size="medium" type="primary" @click="handleAdd">添加药品</el-button>
-    </div>
 
+    <el-input
+      style="margin-left:10px; width:220px"
+      placeholder="请输入供应商名称"
+      prefix-icon="el-icon-search"
+      v-model="keyword1"
+    ></el-input>
+    <div style="float: right;">
+      <el-button size="medium" type="primary" @click="exportExcel" style="margin-left: 10px;">导出</el-button>
+      <el-button size="medium" type="primary" @click="handleAdd" style="margin-left: 10px;">添加</el-button>
+    </div>
     <el-scrollbar>
       <el-table
         :data="medicine"
+        id="table-data"
         border
         size="mini"
         stripe
@@ -21,29 +28,27 @@
         style="width: 100%"
       >
         <el-table-column prop="medicineNumber" label="本位码" width="130" align="center"></el-table-column>
-        <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
-        <el-table-column prop="stockUnit" label="库存单位" align="center" width="80"></el-table-column>
-        <el-table-column prop="stock" label="库存量" align="center" width="80"></el-table-column>
-        <el-table-column prop="alarmValue" label="报警值" align="center" width="80"></el-table-column>
-        <el-table-column prop="supplier" label="供应商" align="center" width="130"></el-table-column>
+        <el-table-column prop="medicineName" label="药品名称" align="center" width="130"></el-table-column>
+        <el-table-column prop="amount" label="预计采购量" align="center" width="100"></el-table-column>
+        <el-table-column prop="unit" label="规格" align="center" width="80"></el-table-column>
+        <el-table-column prop="supplier" label="供应商" align="center" width="200"></el-table-column>
         <el-table-column
           prop="purchaseDate"
-          label="订货提前期"
+          label="预订购日期"
           align="center"
-          width="100"
+          width="150"
           :formatter="dateFormat"
         ></el-table-column>
-        <el-table-column
-          prop="usableTime"
-          label="预计完全消耗日期"
-          align="center"
-          width="130"
-          :formatter="dateFormat"
-        ></el-table-column>
-        <el-table-column fixed="right" prop="createDatetime" label="操作" width="150" align="center">
+        <el-table-column fixed="right" prop="createDatetime" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="large">编辑</el-button>
             <el-button @click="delItem(scope.row.id)" type="text" size="large">删除</el-button>
+            <el-button
+              v-if="scope.row.forecast==1"
+              type="text"
+              @click="dataHandle(scope.row)"
+              size="large"
+            >消耗趋势</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,16 +57,19 @@
 
     <Pagination
       ref="page1"
-      url="/medicine/list"
+      url="/medicine/purchase/list"
       :pagesize="pagesize"
       :page="page"
       :keyword="keyword"
+      :keyword1="keyword1"
       :sort="sort"
       v-model="medicine"
     />
 
-    <el-dialog :visible.sync="dataVisible" @open="open()">
-      <DataVisible></DataVisible>
+    <el-dialog :visible.sync="dataVisible" width="1050px">
+      <DataVisible 
+        :dataList="datalist"
+      />
     </el-dialog>
 
     <!--编辑界面-->
@@ -71,15 +79,18 @@
       :close-on-click-modal="false"
       width="400px"
     >
-      <el-form :model="editForm" label-width="80px" ref="editForm">
+      <el-form :model="editForm" label-width="90px" ref="editForm">
         <el-form-item label="本位码" prop="medicineNumber">
           <el-input v-model="editForm.medicineNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="药品名称" prop="medicineName">
           <el-input v-model="editForm.medicineName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="库存单位" prop="stockUnit">
-          <el-select v-model="editForm.stockUnit" placeholder="请选择">
+        <el-form-item label="预计采购量" prop="amount">
+          <el-input v-model="editForm.amount"></el-input>
+        </el-form-item>
+        <el-form-item label="规格" prop="unit">
+          <el-select v-model="editForm.unit" placeholder="请选择">
             <el-option
               v-for="item in unit"
               :key="item.value"
@@ -88,30 +99,15 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="库存量" prop="stock">
-          <el-input v-model="editForm.stock"></el-input>
-        </el-form-item>
-        <el-form-item label="报警值" prop="alarmValue">
-          <el-input v-model="editForm.alarmValue"></el-input>
-        </el-form-item>
         <el-form-item label="供应商" prop="supplier">
           <el-input v-model="editForm.supplier"></el-input>
         </el-form-item>
-        <el-form-item label="预测">
-          <el-radio-group v-model="editForm.forecast">
-            <el-radio class="radio" :label="1">是</el-radio>
-            <el-radio class="radio" :label="0">否</el-radio>
-          </el-radio-group>
+        <el-form-item label="采购日期" prop="purchaseDate">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.purchaseDate"></el-date-picker>
         </el-form-item>
-        <!-- <el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native="dialogFormVisible=false" >取消</el-button>
+        <el-button @click.native="dialogFormVisible=false">取消</el-button>
         <el-button v-if="dialogStatus=='create'" type="primary" @click="editMedicine">添加</el-button>
         <el-button v-else type="primary" @click="editMedicine">修改</el-button>
       </div>
@@ -120,14 +116,41 @@
 </template>
 
 <script>
-import DataVisible from "./DataVisible";
+import DataVisible from "./DataChart";
 export default {
   methods: {
+    exportExcel() {
+      var pagesize = 10000;
+      var page = 1;
+      var keyword = this.keyword;
+      var keyword1 = this.keyword1;
+      var sort = this.sort;
+      var params = {
+        page,
+        pagesize,
+        sort,
+        keyword1,
+        keyword
+      };
+      this.ajax
+        .get("/medicine/purchase/export", params, {
+          responseType: "blob"
+        })
+        .then(res => {
+          const blob = new Blob([res], { type: "text/csv;charset=GBK" });
+          const fileName = "采购清单.csv";
+          const elink = document.createElement("a");
+          elink.download = fileName;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          document.body.removeChild(elink);
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+        });
+    },
     sortChange({ prop, order }) {
       this.sort = { prop, order };
-    },
-    exportFile:function() {
-      window.location.href="http://localhost:8085/medicine/export";
     },
     //新增
     editMedicine: function() {
@@ -136,7 +159,7 @@ export default {
           this.$confirm("确认提交吗？", "提示", {})
             .then(() => {
               let param = Object.assign({}, this.editForm);
-              this.ajax.post("/medicine/edit", param).then(result => {
+              this.ajax.post("/medicine/purchase/edit", param).then(result => {
                 if (result.code == "SUCCESS") {
                   this.info("添加成功!");
                 } else {
@@ -165,19 +188,29 @@ export default {
       this.editForm = Object.assign({}, row);
     },
     dataHandle: function(row) {
+      this.num = row.medicineNumber;
+      this.ajax
+        .get("/medicine/purchase/forecast", { params: { num: this.num } })
+        .then(result => {
+          if (result.code == "SUCCESS") {
+            this.datalist = result.data;
+          } else {
+            this.error(result.msg);
+          }
+        });
       this.dataVisible = true;
       this.editForm = Object.assign({}, row);
     },
     dateFormat: function(row, column) {
       var date = row[column.property];
       if (date == undefined) {
-        return "is empty";
+        return "data not found";
       }
       return new Date(date).format("yyyy-MM-dd");
     },
     delItem(id) {
       this.confirm("此操作将永久删除该记录, 是否继续?").then(() => {
-        this.ajax.post("/medicine/del?id=" + id).then(result => {
+        this.ajax.post("/medicine/purchase/del?id=" + id).then(result => {
           if (result.code == "SUCCESS") {
             this.info("delete success");
             this.refreshConfig();
@@ -198,6 +231,7 @@ export default {
   },
   data() {
     return {
+      datalist: [],
       unit: [
         {
           value: "盒",
@@ -217,6 +251,7 @@ export default {
         }
       ],
       keyword: "",
+      keyword1: "",
       medicine: [],
       page: "",
       pagesize: 10,
@@ -226,6 +261,7 @@ export default {
         update: "Edit",
         create: "Create"
       },
+      num: 0,
       dataVisible: false,
       dialogFormVisible: false,
       filters: {

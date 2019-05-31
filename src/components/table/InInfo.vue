@@ -1,13 +1,16 @@
 <template>
   <section>
     <el-input
-      style="width:85%"
+      style="width:220px"
       placeholder="请输入出入库方过滤"
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
 
-    <el-button size="medium" type="primary" @click="handleAdd">添加出入库纪录</el-button>
+    <div style="float: right;">
+      <el-button size="medium" type="primary" @click="exportFile" style="margin-left: 10px;">导出</el-button>
+      <el-button size="medium" type="primary" @click="handleAdd">添加入库纪录</el-button>
+    </div>
 
     <el-scrollbar>
       <el-table
@@ -18,11 +21,11 @@
         @sort-change="sortChange"
         style="width: 100%"
       >
-        <el-table-column prop="medicineNumber" label="药品编号" width="100" align="center"></el-table-column>
+        <el-table-column prop="medicineNumber" label="本位码" width="129" align="center"></el-table-column>
         <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
         <el-table-column prop="stockUnit" label="存储单位" align="center" width="90"></el-table-column>
-        <el-table-column prop="amount" label="数量" align="center" width="90"></el-table-column>
-        <el-table-column prop="unitPrice" label="单价" align="center" width="90"></el-table-column>
+        <el-table-column prop="amount" label="数量" align="center" width="80"></el-table-column>
+        <el-table-column prop="unitPrice" label="单价" align="center" width="80"></el-table-column>
         <el-table-column prop="supplier" label="供应商" align="center" width="100"></el-table-column>
         <el-table-column
           prop="productionDate"
@@ -31,12 +34,7 @@
           :formatter="dateFormat"
           width="100"
         ></el-table-column>
-        <el-table-column
-          prop="expirationDate"
-          label="保质期"
-          align="center"
-          width="100"
-        ></el-table-column>
+        <el-table-column prop="expirationDate" label="保质期" align="center" width="100"></el-table-column>
         <el-table-column
           prop="inDate"
           label="入库日期"
@@ -53,7 +51,7 @@
       </el-table>
       <br>
     </el-scrollbar>
-    
+
     <Pagination
       ref="page2"
       url="/medicine/inInfo/list"
@@ -72,7 +70,7 @@
       width="400px"
     >
       <el-form :model="editForm" label-width="80px" ref="editForm">
-        <el-form-item label="药品编号" prop="medicineNumber">
+        <el-form-item label="本位码" prop="medicineNumber">
           <el-input v-model="editForm.medicineNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="药品名称" prop="medicineName">
@@ -88,26 +86,29 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="单价" prop="unitPrice">
+          <el-input v-model="editForm.unitPrice"></el-input>
+        </el-form-item>
         <el-form-item label="数量" prop="amount">
           <el-input v-model="editForm.amount"></el-input>
         </el-form-item>
-        <el-form-item label="供应商" prop="outInObj">
-          <el-input v-model="editForm.outInObj"></el-input>
+        <el-form-item label="供应商" prop="supplier">
+          <el-input v-model="editForm.supplier"></el-input>
         </el-form-item>
-        <el-form-item label="生产日期" prop="outInTime">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outInTime"></el-date-picker>
+        <el-form-item label="生产日期" prop="productionDate">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.productionDate"></el-date-picker>
         </el-form-item>
-        <el-form-item label="保质期" prop="amount">
-          <el-input v-model="editForm.amount"></el-input>
+        <el-form-item label="保质期" prop="expirationDate">
+          <el-input v-model="editForm.expirationDate"></el-input>
         </el-form-item>
-        <el-form-item label="入库日期" prop="outInTime">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.outInTime"></el-date-picker>
+        <el-form-item label="入库日期" prop="inDate">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.inDate"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="dialogFormVisible=false">取消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="editDetail">添加</el-button>
-        <el-button v-else type="primary" @click="editDetail">修改</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="editInfo">添加</el-button>
+        <el-button v-else type="primary" @click="editInfo">修改</el-button>
       </div>
     </el-dialog>
   </section>
@@ -118,6 +119,9 @@ export default {
   methods: {
     sortChange({ prop, order }) {
       this.sort = { prop, order };
+    },
+    exportFile:function() {
+      window.location.href="http://localhost:8085/medicine/inInfo/export";
     },
     dateFormat: function(row, column) {
       var date = row[column.property];
@@ -134,25 +138,23 @@ export default {
         return "入库";
       }
     },
-    //新增
-    editDetail: function() {
+    //
+    editInfo: function() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {})
             .then(() => {
               let param = Object.assign({}, this.editForm);
-              this.ajax
-                .post("/medicine/inInfo/edit", param)
-                .then(result => {
-                  if (result.code == "SUCCESS") {
-                    this.info("添加成功!");
-                  } else {
-                    this.error(result.msg);
-                  }
-                  this.$refs["editForm"].resetFields();
-                  this.dialogFormVisible = false;
-                  this.refreshConfig();
-                });
+              this.ajax.post("/medicine/inInfo/edit", param).then(result => {
+                if (result.code == "SUCCESS") {
+                  this.info("添加成功!");
+                } else {
+                  this.error(result.msg);
+                }
+                this.$refs["editForm"].resetFields();
+                this.dialogFormVisible = false;
+                this.refreshConfig();
+              });
             })
             .catch(e => {
               this.info("操作失败!:" + e);
@@ -162,6 +164,7 @@ export default {
     },
     //显示新增界面
     handleAdd: function() {
+      this.editForm.id=0;
       this.dialogStatus = "create";
       this.dialogFormVisible = true;
     },
@@ -207,11 +210,15 @@ export default {
         {
           value: "片",
           label: "片"
+        },
+        {
+          value: "剂",
+          label: "剂"
         }
       ],
       keyword: "",
       details: [],
-      page:"",
+      page: "",
       pagesize: 10,
       sort: {},
       dialogStatus: "",
