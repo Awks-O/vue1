@@ -1,7 +1,8 @@
 <template>
   <el-row :gutter="10">
     <el-col :span="16">
-      <ve-line :data="chartData" width="1000px"></ve-line>
+      <ve-line :data="chartData" width="1000px">
+      </ve-line>
     </el-col>
     <!-- <span>{{dataList}}</span> -->
   </el-row>
@@ -37,10 +38,10 @@ export default {
   },
   created() {
     // 这是模拟动态数据用的
-    // setTimeout(() => {
+    setTimeout(() => {
     this.chartData.columns = ["日期", "数量"];
     this.chartData.rows = this.dataList;
-    // }, 2000);
+    }, 20);
   },
   data() {
     this.chartSettings = {
@@ -62,7 +63,7 @@ export default {
         ]
       },
       dataList: [
-        // { 日期: "1/1", 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+        // { 日期: "1/1", 访问用户: 1393, 下单用户: 1293, 下单率: 0.32 },
         // { 日期: "1/2", 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
         // { 日期: "1/3", 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
         // { 日期: "1/4", 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
@@ -70,7 +71,13 @@ export default {
         // { 日期: "1/6", 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
       ]
     };
-  }
+  },
+  watch: {
+    dataList(val){
+      this.chartData.columns = ["日期", "数量"];
+      this.chartData.rows = this.dataList;
+    }
+  },
 };
 </script>
 

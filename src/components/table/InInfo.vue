@@ -147,7 +147,7 @@ export default {
               let param = Object.assign({}, this.editForm);
               this.ajax.post("/medicine/inInfo/edit", param).then(result => {
                 if (result.code == "SUCCESS") {
-                  this.info("添加成功!");
+                  this.info("操作成功!");
                 } else {
                   this.error(result.msg);
                 }
@@ -166,6 +166,9 @@ export default {
     handleAdd: function() {
       this.editForm.id=0;
       this.dialogStatus = "create";
+      if (this.$refs["editForm"] !== undefined) {
+        this.$refs["editForm"].resetFields();
+      }
       this.dialogFormVisible = true;
     },
     //显示编辑界面

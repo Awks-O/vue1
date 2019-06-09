@@ -47,7 +47,7 @@
     <Pagination
       ref="page2"
       url="/medicine/outInfo/list"
-      :pagesize="pagesize"
+      :pageSize="pagesize"
       :page="page"
       :keyword="keyword"
       :sort="sort"
@@ -133,7 +133,7 @@ export default {
               let param = Object.assign({}, this.editForm);
               this.ajax.post("/medicine/outInfo/edit", param).then(result => {
                 if (result.code == "SUCCESS") {
-                  this.info("添加成功!");
+                  this.info("操作成功!");
                 } else {
                   this.error(result.msg);
                 }
@@ -151,6 +151,9 @@ export default {
     //显示新增界面
     handleAdd: function() {
       this.dialogStatus = "create";
+      if (this.$refs["editForm"] !== undefined) {
+        this.$refs["editForm"].resetFields();
+      }
       this.dialogFormVisible = true;
     },
     //显示编辑界面

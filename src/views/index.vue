@@ -1,6 +1,6 @@
 
 <template>
-  <el-container style="height:100%">
+  <el-container>
     <header style="background-color: rgb(44, 80, 161);">
       <div class="text-logo">医 院 信 息 系 统</div>
       <p class="meta">History Information System Inventory Management Model.</p>
@@ -16,7 +16,7 @@
             </span>
             <span v-else>
               <el-button type="success" plain size="mini" @click="loginOpen">点击登陆</el-button>
-            </span> -->
+            </span>-->
 
             <!-- <el-dropdown  @command="switchLang">
             <el-button  plain size="mini"  type="primary">
@@ -34,27 +34,24 @@
 
     <el-container>
       <el-aside style="width:auto;">
-        <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse">
+        <el-menu default-active="8" class="el-menu-vertical-demo" :collapse="isCollapse">
           <el-submenu index="1">
-            <!-- <template slot="title" collapse="false">
-              <i class="el-icon-location" @click="isCollapse = !isCollapse"></i>
-              <span>基本组件</span>
+          </el-submenu>
+
+          <el-submenu index="1">
+            <template slot="title" collapse="true">
+              <i class="el-icon-setting"></i>
+              <span>药房管理</span>
             </template>
             <el-menu-item-group>
-              <template slot="title">表格</template>
-              <el-menu-item index="1-11" @click="addTab('最基本表格', 'ConfigTableSimple')">最基本表格</el-menu-item>
-              <el-menu-item index="1-12" @click="addTab('前台数据过滤', 'ConfigTableSimpleFilter')">前台数据过滤</el-menu-item>
-              <el-menu-item index="1-13" @click="addTab('后台数据过滤', 'ConfigTable')">后台数据过滤</el-menu-item>
+              <el-menu-item index="1-1" @click="addTab('最基本表格', 'SimpleTree')">药房管理</el-menu-item>
+              <el-menu-item index="1-2" @click="addTab('前台数据过滤', 'SimpleTree')">药品管理</el-menu-item>
+              <el-menu-item index="1-3" @click="addTab('后台数据过滤', 'SimpleTree')">药品调拨管理</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="树">
-              <el-menu-item index="1-21" @click="addTab('简单树', 'SimpleTree')">简单树</el-menu-item>
-              <el-menu-item index="1-22" @click="addTab('简单的带图标树', 'SimpleTreeWithIcon')">简单的带图标树</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item index="1-31" @click="addTab('上传组件', 'UploadFile')">上传组件</el-menu-item> -->
           </el-submenu>
 
           <el-submenu index="9">
-            <template slot="title" collapse="true">
+            <template slot="title" collapse="false">
               <i class="el-icon-setting"></i>
               <span>药库管理</span>
             </template>
@@ -67,7 +64,7 @@
             </el-menu-item-group>
           </el-submenu>
 
-        <!-- <el-submenu index="4">
+          <!-- <el-submenu index="4">
           <template slot="title" collapse=false>
             <i class="el-icon-setting"></i>
             <span>日志分析</span>
@@ -76,18 +73,18 @@
             <el-menu-item index="4-1" @click="addTab('上传日志', 'UploadFile')">上传日志</el-menu-item>
             <el-menu-item index="4-2" @click="addTab('上传记录', 'UploadHistory')">上传记录</el-menu-item>
           </el-menu-item-group>
-        </el-submenu> -->
+          </el-submenu>-->
 
-        <!-- <el-submenu index="0">
-          <template slot="title" collapse=false>
-            <i class="el-icon-setting"></i>
-            <span>自定义组件</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="0-1" >分页组件</el-menu-item>
-            <el-menu-item index="0-2" @click="addTab('选人组件', 'SelectUser')">选人组件</el-menu-item>
-          </el-menu-item-group>
-          </el-submenu> -->
+          <el-submenu index="0">
+            <template slot="title" collapse="false">
+              <i class="el-icon-setting"></i>
+              <span>系统管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="0-1">人员管理</el-menu-item>
+              <el-menu-item index="0-2" @click="addTab('选人组件', 'SelectUser')">退出登录</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>
@@ -118,13 +115,12 @@ export default {
       user: null,
       keyword: "",
       isCollapse: false,
-      
+
       menus: [{}],
 
       //Tabs
       selectTabName: "ConfigAdd",
-      tabs: {
-      }
+      tabs: {}
     };
   },
   computed: {

@@ -13,7 +13,7 @@
     <el-button @click="cancelLogin">取 消</el-button>
     <el-button type="primary" @click="doLogin">确 定</el-button>
   </div>
-  <h3>管理员：xwjie，普通用户：user1~user10，密码默认都是 123456</h3>
+  <!-- <h3>管理员：xwjie，普通用户：user1~user10，密码默认都是 123456</h3> -->
 </el-dialog>
  
 </template>
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       form: {
-        username: "xwjie",
+        username: "admin",
         password: "123456"
       },
       formLabelWidth: "120px"

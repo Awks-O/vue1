@@ -1,18 +1,19 @@
 <template>
   <section>
     <el-input
-      style="width:220px"
-      placeholder="请输入本位码或药品名称"
+      style="width:300px"
+      placeholder="请输入本位码或药品名称或供应商"
       prefix-icon="el-icon-search"
       v-model="keyword"
     ></el-input>
 
-    <el-input
-      style="margin-left:10px; width:220px"
-      placeholder="请输入供应商名称"
-      prefix-icon="el-icon-search"
+    <el-date-picker
+      type="date"
+      style="margin-left:10px; width:150px"
+      placeholder="选择日期"
+      prefix-icon="el-icon-date"
       v-model="keyword1"
-    ></el-input>
+    ></el-date-picker>
     <div style="float: right;">
       <el-button size="medium" type="primary" @click="exportExcel" style="margin-left: 10px;">导出</el-button>
       <el-button size="medium" type="primary" @click="handleAdd" style="margin-left: 10px;">添加</el-button>
@@ -58,7 +59,7 @@
     <Pagination
       ref="page1"
       url="/medicine/purchase/list"
-      :pagesize="pagesize"
+      :pageSize="pagesize"
       :page="page"
       :keyword="keyword"
       :keyword1="keyword1"
@@ -67,9 +68,7 @@
     />
 
     <el-dialog :visible.sync="dataVisible" width="1050px">
-      <DataVisible 
-        :dataList="datalist"
-      />
+      <DataVisible :dataList="datalist"/>
     </el-dialog>
 
     <!--编辑界面-->
@@ -161,7 +160,7 @@ export default {
               let param = Object.assign({}, this.editForm);
               this.ajax.post("/medicine/purchase/edit", param).then(result => {
                 if (result.code == "SUCCESS") {
-                  this.info("添加成功!");
+                  this.info("操作成功!");
                 } else {
                   this.error(result.msg);
                 }
@@ -179,6 +178,9 @@ export default {
     //显示新增界面
     handleAdd: function() {
       this.dialogStatus = "create";
+      if (this.$refs["editForm"] !== undefined) {
+        this.$refs["editForm"].resetFields();
+      }
       this.dialogFormVisible = true;
     },
     //显示编辑界面
@@ -251,7 +253,7 @@ export default {
         }
       ],
       keyword: "",
-      keyword1: "",
+      keyword1: "2019-06-09T16:00:00.000Z",
       medicine: [],
       page: "",
       pagesize: 10,

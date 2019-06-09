@@ -41,7 +41,7 @@ export default {
     keyword1: {
       type: String,
       required: false,
-      default: ""
+      default: "2019-06-09T16:00:00.000Z"
     },
     // 紧凑型
     small: {
