@@ -15,7 +15,7 @@
       v-model="keyword1"
     ></el-date-picker>
     <div style="float: right;">
-      <el-button size="medium" type="primary" @click="exportExcel" style="margin-left: 10px;">导出</el-button>
+      <el-button size="medium" type="primary" @click="exportFile" style="margin-left: 10px;">导出</el-button>
       <el-button size="medium" type="primary" @click="handleAdd" style="margin-left: 10px;">添加</el-button>
     </div>
     <el-scrollbar>
@@ -30,22 +30,23 @@
       >
         <el-table-column prop="medicineNumber" label="本位码" width="130" align="center"></el-table-column>
         <el-table-column prop="medicineName" label="药品名称" align="center" width="130"></el-table-column>
-        <el-table-column prop="amount" label="预计采购量" align="center" width="100"></el-table-column>
-        <el-table-column prop="unit" label="规格" align="center" width="80"></el-table-column>
+        <el-table-column prop="amount" label="预计采购量" align="center" width="100" ></el-table-column>
+        <el-table-column prop="unit" label="包装" align="center" width="80"></el-table-column>
         <el-table-column prop="supplier" label="供应商" align="center" width="200"></el-table-column>
         <el-table-column
           prop="purchaseDate"
-          label="预订购日期"
+          label="订货提前期"
           align="center"
           width="150"
+          sortable
           :formatter="dateFormat"
         ></el-table-column>
         <el-table-column fixed="right" prop="createDatetime" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="large">编辑</el-button>
             <el-button @click="delItem(scope.row.id)" type="text" size="large">删除</el-button>
+            <!-- v-if="scope.row.forecast==1" -->
             <el-button
-              v-if="scope.row.forecast==1"
               type="text"
               @click="dataHandle(scope.row)"
               size="large"
@@ -88,20 +89,21 @@
         <el-form-item label="预计采购量" prop="amount">
           <el-input v-model="editForm.amount"></el-input>
         </el-form-item>
-        <el-form-item label="规格" prop="unit">
-          <el-select v-model="editForm.unit" placeholder="请选择">
+        <el-form-item label="包装" prop="unit">
+          <el-input v-model="editForm.unit" auto-complete="off"></el-input>
+          <!-- <el-select v-model="editForm.unit" placeholder="请选择">
             <el-option
               v-for="item in unit"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="供应商" prop="supplier">
           <el-input v-model="editForm.supplier"></el-input>
         </el-form-item>
-        <el-form-item label="采购日期" prop="purchaseDate">
+        <el-form-item label="订货提前期" prop="purchaseDate">
           <el-date-picker type="date" placeholder="选择日期" v-model="editForm.purchaseDate"></el-date-picker>
         </el-form-item>
       </el-form>
@@ -118,6 +120,41 @@
 import DataVisible from "./DataChart";
 export default {
   methods: {
+    formatDate(date, fmt) {
+      var date= new Date(Date.parse(date));
+      if (/(y+)/.test(fmt)) {
+
+        fmt = fmt.replace(
+          RegExp.$1,
+          (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+        );
+      }
+      let o = {
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "h+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds()
+      };
+      for (let k in o) {
+        if (new RegExp(`(${k})`).test(fmt)) {
+          let str = o[k] + "";
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length === 1 ? str : ("00" + str).substr(str.length)
+          );
+        }
+      }
+      return fmt;
+    },
+    exportFile: function() {
+      var url =
+        "http://localhost:8085/medicine/purchase/export?date=" +
+        this.formatDate(this.keyword1.toString(), "yyyy-MM-dd") +
+        "&keyword=" +
+        this.keyword;
+      window.location.href = url;
+    },
     exportExcel() {
       var pagesize = 10000;
       var page = 1;
@@ -206,7 +243,7 @@ export default {
     dateFormat: function(row, column) {
       var date = row[column.property];
       if (date == undefined) {
-        return "data not found";
+        return "无入库数据";
       }
       return new Date(date).format("yyyy-MM-dd");
     },

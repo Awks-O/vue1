@@ -24,7 +24,7 @@
         <el-table-column prop="medicineNumber" label="本位码" width="145" align="center"></el-table-column>
         <el-table-column prop="medicineName" label="药品名称" align="center" width="145"></el-table-column>
         <el-table-column prop="amount" label="数量" align="center" width="100"></el-table-column>
-        <el-table-column prop="stockUnit" label="规格" align="center" width="100"></el-table-column>
+        <el-table-column prop="stockUnit" label="包装" align="center" width="100"></el-table-column>
         <el-table-column prop="unitPrice" label="退货单价" align="center" width="100"></el-table-column>
         <el-table-column prop="supplier" label="供应商" align="center" width="150"></el-table-column>
         <el-table-column
@@ -68,15 +68,16 @@
         <el-form-item label="药品名称" prop="medicineName">
           <el-input v-model="editForm.medicineName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="存储单位" prop="stockUnit">
-          <el-select v-model="editForm.stockUnit" placeholder="请选择">
+        <el-form-item label="包装" prop="stockUnit">
+          <el-input v-model="editForm.stockUnit" auto-complete="off"></el-input>
+          <!-- <el-select v-model="editForm.stockUnit" placeholder="请选择">
             <el-option
               v-for="item in unit"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="退货单价" prop="unitPrice">
           <el-input v-model="editForm.unitPrice"></el-input>

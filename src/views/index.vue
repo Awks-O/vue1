@@ -39,7 +39,7 @@
           </el-submenu>
 
           <el-submenu index="1">
-            <template slot="title" collapse="true">
+            <template slot="title" collapse="false">
               <i class="el-icon-setting"></i>
               <span>药房管理</span>
             </template>

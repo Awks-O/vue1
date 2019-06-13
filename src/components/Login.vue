@@ -124,7 +124,7 @@ export default {
       capsTooltip: false,
       loading: false,
       showDialog: false,
-      redirect: undefined,
+      redirect: "dashboard",
       otherQuery: {}
     };
   },
@@ -186,7 +186,7 @@ export default {
           this.ajax.postForm("app/login", this.loginForm)
             .then(() => {
               this.$router.push({
-                path: this.redirect || "/",
+                path: this.redirect || "/dashboard",
                 query: this.otherQuery
               });
               this.loading = false;

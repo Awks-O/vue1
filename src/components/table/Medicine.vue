@@ -20,18 +20,17 @@
         @sort-change="sortChange"
         style="width: 100%"
       >
-        <el-table-column prop="medicineNumber" label="本位码" width="130" align="center"></el-table-column>
+        <el-table-column prop="medicineNumber" label="本位码" width="120" align="center"></el-table-column>
         <el-table-column prop="medicineName" label="药品名称" align="center" width="120"></el-table-column>
-        <el-table-column prop="stockUnit" label="库存单位" align="center" width="80"></el-table-column>
-        <el-table-column prop="stock" label="库存量" align="center" width="80"></el-table-column>
+        <el-table-column prop="stockUnit" label="包装" align="center" width="100"></el-table-column>
+        <el-table-column prop="stock" label="库存量" align="center" width="65"></el-table-column>
         <el-table-column prop="alarmValue" label="报警值" align="center" width="80"></el-table-column>
         <el-table-column prop="supplier" label="供应商" align="center" width="130"></el-table-column>
         <el-table-column
-          prop="purchaseDate"
-          label="订货提前期"
+          prop="period"
+          label="订货周期（月）"
           align="center"
-          width="100"
-          :formatter="dateFormat"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="usableTime"
@@ -40,7 +39,7 @@
           width="130"
           :formatter="dateFormat"
         ></el-table-column>
-        <el-table-column fixed="right" prop="createDatetime" label="操作" width="150" align="center">
+        <el-table-column fixed="right" prop="createDatetime" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="large">编辑</el-button>
             <el-button @click="delItem(scope.row.id)" type="text" size="large">删除</el-button>
@@ -71,22 +70,26 @@
       :close-on-click-modal="false"
       width="400px"
     >
-      <el-form :model="editForm" label-width="80px" ref="editForm">
+      <el-form :model="editForm" label-width="110px" ref="editForm">
         <el-form-item label="本位码" prop="medicineNumber">
           <el-input v-model="editForm.medicineNumber" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="药品名称" prop="medicineName">
           <el-input v-model="editForm.medicineName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="库存单位" prop="stockUnit">
-          <el-select v-model="editForm.stockUnit" placeholder="请选择">
+        <el-form-item label="包装" prop="stockUnit">
+          <el-input v-model="editForm.stockUnit" auto-complete="off"></el-input>
+          <!-- <el-select v-model="editForm.stockUnit" placeholder="请选择">
             <el-option
               v-for="item in unit"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
-          </el-select>
+          </el-select> -->
+        </el-form-item>
+        <el-form-item label="订货周期（月）" prop="period">
+          <el-input v-model="editForm.period"></el-input>
         </el-form-item>
         <el-form-item label="库存量" prop="stock">
           <el-input v-model="editForm.stock"></el-input>

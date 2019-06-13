@@ -13,13 +13,23 @@ const dashboard = resolve => require(['./views/index.vue'], resolve);
 //所有权限通用路由表 
 //如首页和登录页和一些不用权限的公用页面
 export const constantRouterMap = [
-  { path: '/login', component: Login },
-  {
+  { 
+    // path: '/login', 
+    // component: Login
     path: '/',
-    component: (resolve) => require(['./views/index.vue'], resolve),
-    redirect: '/dashboard',
-    name: '首页',
-    children: [{ path: 'dashboard', component: dashboard }]
+    // component: Login,
+   component: (resolve) => require(['./components/Login.vue'], resolve),
+    redirect: '/login',
+    name: '登录',
+    children: [{ path: 'login', component: Login }]
+  },
+  {
+    path: '/dashboard', component: dashboard
+    // path: '/',
+    // component: (resolve) => require(['./views/index.vue'], resolve),
+    // redirect: '/dashboard',
+    // name: '首页',
+    // children: [{ path: 'dashboard', component: dashboard }]
   },
 ]
 
