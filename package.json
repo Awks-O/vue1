@@ -24,7 +24,7 @@
     "@babel/preset-env": "^7.4.2",
     "@vue/cli-plugin-babel": "^3.5.3",
     "@vue/cli-plugin-eslint": "^3.5.1",
-    "@vue/cli-service": "^3.5.3",
+    "@vue/cli-service": "^5.0.8",
     "babel-loader": "^8.0.5",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
